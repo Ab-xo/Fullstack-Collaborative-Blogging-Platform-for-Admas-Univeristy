@@ -7,10 +7,14 @@ import { initializeSocket, shutdownSocket } from './src/socket/index.js';
 import socketService from './src/services/socketService.js';
 import cacheService from './src/services/cacheService.js';
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 10000;
 
 // Suppress mongoose duplicate index warning
 process.env.SUPPRESS_NO_CONFIG_WARNING = 'true';
+// Suppress duplicate index warnings in production
+if (process.env.NODE_ENV === 'production') {
+  process.env.NODE_NO_WARNINGS = '1';
+}
 
 /**
  * Start the server
@@ -85,18 +89,25 @@ const startServer = async () => {
       socketStatus = '✗';
     }
 
-    httpServer.listen(PORT, () => {
-      // Clean, compact startup message
-      console.log('\n╔════════════════════════════════════════════════════╗');
-      console.log('║       🚀 ADMAS BLOG API SERVER                     ║');
-      console.log('╠════════════════════════════════════════════════════╣');
-      console.log(`║  Port: ${PORT}  │  Mode: ${(process.env.NODE_ENV || 'development').padEnd(12)}            ║`);
-      console.log('╠════════════════════════════════════════════════════╣');
-      console.log(`║  DB: ${cacheStatus === '✓' ? '✓' : '✗'}  Cache: ${cacheStatus}  Firebase: ${firebaseStatus}  Cloud: ${cloudinaryStatus}  ║`);
-      console.log(`║  Socket: ${socketStatus}  Email: ${emailStatus}                              ║`);
-      console.log('╠════════════════════════════════════════════════════╣');
-      console.log(`║  API: http://localhost:${PORT}/api                    ║`);
-      console.log('╚════════════════════════════════════════════════════╝\n');
+    httpServer.listen(PORT, '0.0.0.0', () => {
+      // Production-ready startup message
+      if (process.env.NODE_ENV === 'production') {
+        console.log(`✅ Admas Blog API Server running on port ${PORT}`);
+        console.log(`✅ Environment: ${process.env.NODE_ENV}`);
+        console.log(`✅ Services: DB:${cacheStatus} Cache:${cacheStatus} Firebase:${firebaseStatus} Cloud:${cloudinaryStatus} Socket:${socketStatus} Email:${emailStatus}`);
+      } else {
+        // Detailed message for development
+        console.log('\n╔════════════════════════════════════════════════════╗');
+        console.log('║       🚀 ADMAS BLOG API SERVER                     ║');
+        console.log('╠════════════════════════════════════════════════════╣');
+        console.log(`║  Port: ${PORT}  │  Mode: ${(process.env.NODE_ENV || 'development').padEnd(12)}            ║`);
+        console.log('╠════════════════════════════════════════════════════╣');
+        console.log(`║  DB: ${cacheStatus === '✓' ? '✓' : '✗'}  Cache: ${cacheStatus}  Firebase: ${firebaseStatus}  Cloud: ${cloudinaryStatus}  ║`);
+        console.log(`║  Socket: ${socketStatus}  Email: ${emailStatus}                              ║`);
+        console.log('╠════════════════════════════════════════════════════╣');
+        console.log(`║  API: http://localhost:${PORT}/api                    ║`);
+        console.log('╚════════════════════════════════════════════════════╝\n');
+      }
     });
 
     // Store server reference for graceful shutdown

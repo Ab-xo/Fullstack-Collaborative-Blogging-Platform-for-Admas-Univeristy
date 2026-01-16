@@ -212,6 +212,18 @@ app.get('/api/docs', (req, res) => {
   res.status(200).json(docs);
 });
 
+// Root route - Welcome message
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to Admas University Blog API',
+    version: '1.0.0',
+    documentation: '/api/docs',
+    health: '/api/health',
+    status: 'Server is running'
+  });
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);

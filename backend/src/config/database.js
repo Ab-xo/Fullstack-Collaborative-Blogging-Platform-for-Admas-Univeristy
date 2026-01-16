@@ -2,10 +2,17 @@ import mongoose from 'mongoose';
 
 // Suppress mongoose deprecation warnings
 mongoose.set('strictQuery', true);
+// Disable automatic index creation in production (indexes should be created manually)
+if (process.env.NODE_ENV === 'production') {
+  mongoose.set('autoIndex', false);
+}
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      // Suppress duplicate index warnings
+      autoIndex: process.env.NODE_ENV !== 'production'
+    });
     
     // Import User model after connection is established
     const User = (await import('../models/User.js')).default;
