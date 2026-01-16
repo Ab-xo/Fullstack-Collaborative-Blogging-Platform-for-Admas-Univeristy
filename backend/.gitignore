@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory
+coverage/
+
+# Build output
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads (keep folder structure)
+uploads/*
+!uploads/.gitkeep
+
+# Test files (keep in repo for CI/CD)
+# *.test.js
+# __tests__/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database dumps
+*.dump
+*.sql
+
+# Sensitive files
+*.pem
+*.key
+*.cert
+
+# Scripts (development only - uncomment if you don't want to deploy scripts)
+# scripts/

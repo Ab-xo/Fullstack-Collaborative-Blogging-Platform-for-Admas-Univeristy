@@ -1,0 +1,153 @@
+# ==========================================
+# Dependencies
+# ==========================================
+node_modules/
+**/node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ==========================================
+# Environment Variables (CRITICAL - NEVER COMMIT)
+# ==========================================
+.env
+.env.local
+.env.production
+.env.*.local
+backend/.env
+frontend/.env
+**/.env
+
+# ==========================================
+# Build Output
+# ==========================================
+dist/
+dist-ssr/
+build/
+.next/
+out/
+.nuxt/
+.cache/
+.parcel-cache/
+backend/dist/
+frontend/dist/
+
+# ==========================================
+# Logs
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==========================================
+# Testing & Coverage
+# ==========================================
+coverage/
+.nyc_output/
+*.lcov
+.jest-cache/
+
+# ==========================================
+# IDE & Editor Files
+# ==========================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ==========================================
+# OS Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Development Tools (Kiro)
+# ==========================================
+.kiro/
+
+# ==========================================
+# Uploads & User Content
+# ==========================================
+backend/uploads/*
+!backend/uploads/.gitkeep
+uploads/
+public/uploads/
+
+# ==========================================
+# Database Files
+# ==========================================
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.sql
+
+# ==========================================
+# Certificates & Keys (CRITICAL - NEVER COMMIT)
+# ==========================================
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+serviceAccountKey.json
+firebase-adminsdk-*.json
+
+# ==========================================
+# Temporary Files
+# ==========================================
+*.tmp
+*.temp
+.temp/
+tmp/
+
+# ==========================================
+# Archives
+# ==========================================
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# ==========================================
+# Large Media Files
+# ==========================================
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.flv
+*.wmv
+
+# ==========================================
+# Documentation (Keep these)
+# ==========================================
+# *.pdf
+# *.docx
+
+# ==========================================
+# Misc
+# ==========================================
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
