@@ -8,7 +8,7 @@ import {
   Mail,
   Calendar,
   Building,
-  IdCard,
+  CreditCard,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import adminService from "../../services/adminService";
@@ -163,7 +163,7 @@ const PendingAuthors = () => {
 
                   {user.universityId && (
                     <div className="flex items-center gap-3 text-sm">
-                      <IdCard className="w-4 h-4 text-gray-400" />
+                      <CreditCard className="w-4 h-4 text-gray-400" />
                       <span className="text-gray-600 dark:text-gray-300">
                         {user.universityId}
                       </span>
