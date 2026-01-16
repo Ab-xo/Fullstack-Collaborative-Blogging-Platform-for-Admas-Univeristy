@@ -8,7 +8,7 @@
   publish = "dist"
   
   # Base directory for the build
-  base = "admas-blog/frontend"
+  base = "frontend"
 
 [build.environment]
   # Node version
