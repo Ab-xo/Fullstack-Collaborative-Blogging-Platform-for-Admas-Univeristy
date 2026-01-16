@@ -74,13 +74,20 @@ const LoginForm = () => {
 
       navigate(redirectPath, { replace: true });
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Login failed. Please try again.";
+      let errorMessage = "Login failed. Please try again.";
+
+      // Handle timeout errors specifically
+      if (error.code === "ECONNABORTED" || error.message?.includes("timeout")) {
+        errorMessage =
+          "Server is waking up (this takes 30-60 seconds on first request). Please try again in a moment.";
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
 
       toast.error(errorMessage, {
-        duration: 5000,
+        duration: 6000,
         position: "top-center",
       });
     } finally {

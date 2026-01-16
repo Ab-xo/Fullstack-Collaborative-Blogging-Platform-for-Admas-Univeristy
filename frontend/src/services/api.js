@@ -10,7 +10,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true,
-  timeout: 30000,
+  timeout: 60000, // Increased to 60 seconds for Render free tier cold starts
 });
 
 // Public endpoints that don't require authentication
