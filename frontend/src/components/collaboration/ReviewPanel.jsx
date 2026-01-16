@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { MessageSquare, CheckCircle, AlertCircle, Send, X } from 'lucide-react';
-import apiClient from '../../services/apiClient';
-import toast from 'react-hot-toast';
-import { formatDistanceToNow } from 'date-fns';
+import { useState, useEffect } from "react";
+import { MessageSquare, CheckCircle, AlertCircle, Send, X } from "lucide-react";
+import apiClient from "../../api/client";
+import toast from "react-hot-toast";
+import { formatDistanceToNow } from "date-fns";
 
 const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
   const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState('');
-  const [reviewStatus, setReviewStatus] = useState('comment_only');
+  const [newReview, setNewReview] = useState("");
+  const [reviewStatus, setReviewStatus] = useState("comment_only");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -23,7 +23,7 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
         setReviews(response.data.reviews);
       }
     } catch (error) {
-      console.error('Error fetching reviews:', error);
+      console.error("Error fetching reviews:", error);
     } finally {
       setIsLoading(false);
     }
@@ -37,17 +37,17 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
     try {
       const response = await apiClient.post(`/reviews/${postId}/reviews`, {
         content: newReview,
-        status: reviewStatus
+        status: reviewStatus,
       });
 
       if (response.data.success) {
-        toast.success('Review submitted successfully');
-        setNewReview('');
-        setReviewStatus('comment_only');
+        toast.success("Review submitted successfully");
+        setNewReview("");
+        setReviewStatus("comment_only");
         fetchReviews();
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error submitting review');
+      toast.error(error.response?.data?.message || "Error submitting review");
     } finally {
       setIsSubmitting(false);
     }
@@ -56,13 +56,15 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
   const handleRequestReview = async () => {
     setIsSubmitting(true);
     try {
-      const response = await apiClient.post(`/reviews/${postId}/request-review`);
+      const response = await apiClient.post(
+        `/reviews/${postId}/request-review`
+      );
       if (response.data.success) {
-        toast.success('Review requested from collaborators');
-        if (onStatusUpdate) onStatusUpdate('under_review');
+        toast.success("Review requested from collaborators");
+        if (onStatusUpdate) onStatusUpdate("under_review");
       }
     } catch (error) {
-      toast.error('Error requesting review');
+      toast.error("Error requesting review");
     } finally {
       setIsSubmitting(false);
     }
@@ -70,9 +72,9 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'approved':
+      case "approved":
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'changes_requested':
+      case "changes_requested":
         return <AlertCircle className="w-4 h-4 text-amber-500" />;
       default:
         return <MessageSquare className="w-4 h-4 text-blue-500" />;
@@ -81,9 +83,12 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
 
   const getStatusLabel = (status) => {
     switch (status) {
-      case 'approved': return 'Approved';
-      case 'changes_requested': return 'Changes Requested';
-      default: return 'Comment Only';
+      case "approved":
+        return "Approved";
+      case "changes_requested":
+        return "Changes Requested";
+      default:
+        return "Comment Only";
     }
   };
 
@@ -92,17 +97,21 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
       <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-900/50">
         <div className="flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-blue-600" />
-          <h3 className="font-semibold text-gray-900 dark:text-white text-lg">Peer Review</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white text-lg">
+            Peer Review
+          </h3>
         </div>
-        {isAuthor && currentStatus !== 'under_review' && currentStatus !== 'published' && (
-          <button
-            onClick={handleRequestReview}
-            disabled={isSubmitting}
-            className="text-xs px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            Request Peer Review
-          </button>
-        )}
+        {isAuthor &&
+          currentStatus !== "under_review" &&
+          currentStatus !== "published" && (
+            <button
+              onClick={handleRequestReview}
+              disabled={isSubmitting}
+              className="text-xs px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              Request Peer Review
+            </button>
+          )}
       </div>
 
       <div className="p-4">
@@ -114,12 +123,18 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
             </div>
           ) : reviews.length > 0 ? (
             reviews.map((review) => (
-              <div key={review._id} className="p-3 rounded-lg border border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+              <div
+                key={review._id}
+                className="p-3 rounded-lg border border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50"
+              >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <img 
-                      src={review.reviewer?.profile?.avatar || `https://ui-avatars.com/api/?name=${review.reviewer?.firstName}+${review.reviewer?.lastName}`} 
-                      alt="" 
+                    <img
+                      src={
+                        review.reviewer?.profile?.avatar ||
+                        `https://ui-avatars.com/api/?name=${review.reviewer?.firstName}+${review.reviewer?.lastName}`
+                      }
+                      alt=""
                       className="w-6 h-6 rounded-full"
                     />
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -133,9 +148,13 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
                     </span>
                   </div>
                 </div>
-                <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{review.content}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                  {review.content}
+                </p>
                 <div className="mt-2 text-[10px] text-gray-400">
-                  {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(review.createdAt), {
+                    addSuffix: true,
+                  })}
                 </div>
               </div>
             ))
@@ -152,33 +171,33 @@ const ReviewPanel = ({ postId, isAuthor, currentStatus, onStatusUpdate }) => {
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => setReviewStatus('comment_only')}
+                onClick={() => setReviewStatus("comment_only")}
                 className={`flex-1 py-2 text-xs rounded-lg border transition-all ${
-                  reviewStatus === 'comment_only' 
-                    ? 'border-blue-600 bg-blue-50 text-blue-600 dark:bg-blue-900/20' 
-                    : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                  reviewStatus === "comment_only"
+                    ? "border-blue-600 bg-blue-50 text-blue-600 dark:bg-blue-900/20"
+                    : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
                 }`}
               >
                 Comment
               </button>
               <button
                 type="button"
-                onClick={() => setReviewStatus('changes_requested')}
+                onClick={() => setReviewStatus("changes_requested")}
                 className={`flex-1 py-2 text-xs rounded-lg border transition-all ${
-                  reviewStatus === 'changes_requested' 
-                    ? 'border-amber-600 bg-amber-50 text-amber-600 dark:bg-amber-900/20' 
-                    : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                  reviewStatus === "changes_requested"
+                    ? "border-amber-600 bg-amber-50 text-amber-600 dark:bg-amber-900/20"
+                    : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
                 }`}
               >
                 Request Changes
               </button>
               <button
                 type="button"
-                onClick={() => setReviewStatus('approved')}
+                onClick={() => setReviewStatus("approved")}
                 className={`flex-1 py-2 text-xs rounded-lg border transition-all ${
-                  reviewStatus === 'approved' 
-                    ? 'border-green-600 bg-green-50 text-green-600 dark:bg-green-900/20' 
-                    : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                  reviewStatus === "approved"
+                    ? "border-green-600 bg-green-50 text-green-600 dark:bg-green-900/20"
+                    : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
                 }`}
               >
                 Approve
