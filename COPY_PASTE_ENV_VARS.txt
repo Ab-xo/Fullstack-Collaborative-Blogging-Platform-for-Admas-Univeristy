@@ -1,0 +1,81 @@
+========================================
+NETLIFY ENVIRONMENT VARIABLES
+Copy and paste these into Netlify
+========================================
+
+Variable 1:
+Key: VITE_API_URL
+Value: https://admas-blog-backend.onrender.com/api
+
+Variable 2:
+Key: VITE_SOCKET_URL
+Value: https://admas-blog-backend.onrender.com
+
+Variable 3:
+Key: VITE_APP_NAME
+Value: Admas University Blog
+
+Variable 4:
+Key: VITE_FIREBASE_API_KEY
+Value: AIzaSyD6JRbJI4zfJ6xpIZwc7DisD3aHPzPSXS8
+
+Variable 5:
+Key: VITE_FIREBASE_AUTH_DOMAIN
+Value: admas-blog.firebaseapp.com
+
+Variable 6:
+Key: VITE_FIREBASE_PROJECT_ID
+Value: admas-blog
+
+Variable 7:
+Key: VITE_FIREBASE_STORAGE_BUCKET
+Value: admas-blog.firebasestorage.app
+
+Variable 8:
+Key: VITE_FIREBASE_MESSAGING_SENDER_ID
+Value: 1008280273110
+
+Variable 9:
+Key: VITE_FIREBASE_APP_ID
+Value: 1:1008280273110:web:10ed6f202d475680270977
+
+========================================
+HOW TO ADD TO NETLIFY:
+========================================
+1. Go to: https://app.netlify.com/
+2. Click your site
+3. Site settings → Environment variables
+4. Click "Add a variable"
+5. Copy Key and Value from above
+6. Click "Create variable"
+7. Repeat for all 9 variables
+8. Go to Deploys → Trigger deploy → Deploy site
+
+========================================
+RENDER BACKEND UPDATE:
+========================================
+After Netlify deploys, update Render:
+
+1. Go to: https://dashboard.render.com/
+2. Click: admas-blog-backend
+3. Environment tab
+4. Find: CLIENT_URL
+5. Change to: https://YOUR-NETLIFY-URL.netlify.app
+6. Save Changes
+
+========================================
+TEST BACKEND:
+========================================
+Visit: https://admas-blog-backend.onrender.com/api/health
+Should see JSON response
+
+========================================
+TEST FRONTEND:
+========================================
+1. Open your Netlify site
+2. Press F12 (DevTools)
+3. Console tab
+4. Type: console.log(import.meta.env.VITE_API_URL)
+5. Should show: https://admas-blog-backend.onrender.com/api
+
+========================================
