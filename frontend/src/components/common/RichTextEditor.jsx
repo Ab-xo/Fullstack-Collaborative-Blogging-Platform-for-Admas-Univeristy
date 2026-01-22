@@ -81,6 +81,7 @@ const RichTextEditor = ({
   const [tableStyle, setTableStyle] = useState("default");
   const [showDeleteTableDialog, setShowDeleteTableDialog] = useState(false);
   const [tableToDelete, setTableToDelete] = useState(null);
+  const [showImageDialog, setShowImageDialog] = useState(false);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [imageAltText, setImageAltText] = useState("");
   const [isLoadingImage, setIsLoadingImage] = useState(false);
@@ -97,19 +98,19 @@ const RichTextEditor = ({
   // Make tables and images resizable
   useEffect(() => {
     if (isRemoteUpdate) return;
-    
+
     const timeout = setTimeout(() => {
       if (editorRef.current) {
         const tableInstances = makeTablesResizable(editorRef.current);
         const imageInstances = makeImagesResizable(editorRef.current);
-        
+
         return () => {
-          tableInstances.forEach(inst => inst.destroy());
-          imageInstances.forEach(inst => inst.destroy());
+          tableInstances.forEach((inst) => inst.destroy());
+          imageInstances.forEach((inst) => inst.destroy());
         };
       }
     }, 100);
-    
+
     return () => clearTimeout(timeout);
   }, [value, isRemoteUpdate]);
 
@@ -554,7 +555,7 @@ const RichTextEditor = ({
             if (selection.toString()) {
               executeCommand(
                 "insertHTML",
-                `<code>${selection.toString()}</code>`
+                `<code>${selection.toString()}</code>`,
               );
             }
           },
@@ -564,26 +565,26 @@ const RichTextEditor = ({
           label: "Insert Link",
           action: () => setShowLinkDialog(true),
         },
-          {
-            icon: ImageIcon,
-            label: "Insert Image",
-            action: () => setShowImageDialog(true),
-          },
-          {
-            icon: Video,
-            label: "Insert Video",
-            action: () => setShowVideoDialog(true),
-          },
-          {
-            icon: FileText,
-            label: "Insert Document",
-            action: () => setShowDocDialog(true),
-          },
-          {
-            icon: Table,
-            label: "Insert Table",
-            action: () => setShowTableDialog(true),
-          },
+        {
+          icon: ImageIcon,
+          label: "Insert Image",
+          action: () => setShowImageDialog(true),
+        },
+        {
+          icon: Video,
+          label: "Insert Video",
+          action: () => setShowVideoDialog(true),
+        },
+        {
+          icon: FileText,
+          label: "Insert Document",
+          action: () => setShowDocDialog(true),
+        },
+        {
+          icon: Table,
+          label: "Insert Table",
+          action: () => setShowTableDialog(true),
+        },
         {
           icon: Minus,
           label: "Horizontal Rule",
@@ -709,7 +710,7 @@ const RichTextEditor = ({
     let tableHTML = '<div class="table-alignment-wrapper align-left">';
     tableHTML += `<table style="${style.style.replace(
       "width: 100%",
-      "width: auto"
+      "width: auto",
     )}; display: table;" data-table-editable="true">`;
 
     // Header row
@@ -824,12 +825,12 @@ const RichTextEditor = ({
           insertImage(url);
           toast.info(
             "Image inserted! Preview may not show due to CORS, but it should work when published.",
-            { duration: 4000 }
+            { duration: 4000 },
           );
         } else {
           setIsLoadingImage(false);
           toast.error(
-            "Could not load image. Please check the URL is a direct image link."
+            "Could not load image. Please check the URL is a direct image link.",
           );
         }
       };
