@@ -100,7 +100,7 @@ const CATEGORIES = [
 
 const CreatePost = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const {
     register,
     handleSubmit,
@@ -118,10 +118,19 @@ const CreatePost = () => {
   const [guidelinesAcknowledged, setGuidelinesAcknowledged] = useState(false);
   const fileInputRef = useRef(null);
 
+  // Show loading while auth is being checked
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+
   // Check if user has author permissions
   const userRoles = user?.roles || [user?.role] || [];
   const canCreatePosts = userRoles.some((role) =>
-    ["admin", "moderator", "author"].includes(role)
+    ["admin", "moderator", "author"].includes(role),
   );
 
   // Redirect readers who shouldn't be able to create posts
@@ -180,7 +189,7 @@ const CreatePost = () => {
         : "";
       if (textContent.length < 50) {
         toast.error(
-          "Content must be at least 50 characters long (excluding formatting)"
+          "Content must be at least 50 characters long (excluding formatting)",
         );
         setLoading(false);
         return;
@@ -228,13 +237,13 @@ const CreatePost = () => {
       if (response.violationReport?.hasViolations) {
         toast.success(
           `Post submitted for review. Note: ${response.violationReport.violationCount} potential violation(s) detected - moderators will review.`,
-          { duration: 5000 }
+          { duration: 5000 },
         );
       } else {
         toast.success(
           status === "draft"
             ? "Draft saved successfully!"
-            : "Post submitted for review!"
+            : "Post submitted for review!",
         );
       }
       navigate("/my-posts");
@@ -247,7 +256,7 @@ const CreatePost = () => {
           error.response.data.moderation;
         toast.error(
           `Content flagged: ${error.response.data.message}. Severity: ${severity}`,
-          { duration: 6000 }
+          { duration: 6000 },
         );
         return;
       }
@@ -413,7 +422,7 @@ const CreatePost = () => {
         // Check if it looks like an image URL
         const looksLikeImage =
           /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico|tiff?|avif)(\?|$)/i.test(
-            finalUrl
+            finalUrl,
           ) ||
           finalUrl.includes("/image") ||
           finalUrl.includes("img") ||
@@ -434,12 +443,12 @@ const CreatePost = () => {
           setImageUrl("");
           toast.success(
             "Image URL accepted! Preview may not show due to CORS, but it should work when published.",
-            { duration: 4000 }
+            { duration: 4000 },
           );
         } else {
           toast.error(
             "Could not load image. Please check the URL is a direct image link.",
-            { id: "image-url-load" }
+            { id: "image-url-load" },
           );
         }
       };
