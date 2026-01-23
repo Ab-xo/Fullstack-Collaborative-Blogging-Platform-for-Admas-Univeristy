@@ -107,7 +107,7 @@ const FeaturedBlogs = () => {
         if (posts.length === 0) {
           try {
             const postsResponse = await apiClient.get(
-              "/posts?status=published&limit=6"
+              "/posts?status=published&limit=6",
             );
             if (
               postsResponse.data?.success &&
@@ -210,7 +210,7 @@ const FeaturedBlogs = () => {
   };
 
   return (
-    <section className="relative py-16 sm:py-24 bg-gradient-to-b from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 overflow-hidden">
+    <section className="relative responsive-padding-y bg-gradient-to-b from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl" />
@@ -218,7 +218,7 @@ const FeaturedBlogs = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-500/3 to-cyan-500/3 dark:from-blue-500/5 dark:to-cyan-500/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="responsive-container relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -227,13 +227,13 @@ const FeaturedBlogs = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="responsive-heading-2 text-gray-900 dark:text-white mb-4">
             Featured{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500">
               Stories
             </span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
+          <p className="responsive-text text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Discover the most engaging articles from our vibrant academic
             community
           </p>
@@ -241,7 +241,7 @@ const FeaturedBlogs = () => {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="responsive-grid-1-2-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div
                 key={i}
@@ -303,7 +303,7 @@ const FeaturedBlogs = () => {
 
         {/* Posts Grid */}
         {!isLoading && !error && featuredPosts.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="responsive-grid-1-2-3">
             {featuredPosts.map((post, index) => (
               <motion.div
                 key={post._id}
@@ -337,7 +337,7 @@ const FeaturedBlogs = () => {
                     <div className="absolute top-4 left-4">
                       <span
                         className={`px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${getCategoryColor(
-                          post.category
+                          post.category,
                         )} shadow-lg`}
                       >
                         {getCategoryName(post.category)}

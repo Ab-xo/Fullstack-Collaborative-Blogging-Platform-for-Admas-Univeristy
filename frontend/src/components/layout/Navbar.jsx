@@ -319,7 +319,7 @@ const Navbar = () => {
 
                 {/* Mega Menu Dropdown - Aligned Grid */}
                 {categoriesOpen && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-5 z-50 min-w-[640px]">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-5 z-50 min-w-[640px] max-w-[90vw]">
                     {/* Column Headers */}
                     <div className="grid grid-cols-5 gap-4 mb-3">
                       {CATEGORY_GROUPS.map((group) => (
@@ -344,7 +344,7 @@ const Navbar = () => {
                               key={cat.name}
                               to={cat.href}
                               onClick={() => setCategoriesOpen(false)}
-                              className="flex items-center space-x-2 py-2 px-1 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+                              className="flex items-center space-x-2 py-2 px-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group min-h-[44px]"
                             >
                               <Icon
                                 className={`w-4 h-4 flex-shrink-0 ${cat.color}`}
@@ -363,7 +363,7 @@ const Navbar = () => {
                       <Link
                         to="/categories"
                         onClick={() => setCategoriesOpen(false)}
-                        className="text-xs text-primary-600 dark:text-primary-400 font-medium hover:underline"
+                        className="text-xs text-primary-600 dark:text-primary-400 font-medium hover:underline py-2"
                       >
                         View All Categories →
                       </Link>
@@ -493,12 +493,13 @@ const Navbar = () => {
               {isAuthenticated && <NotificationDropdown />}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="touch-target p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
                 {mobileMenuOpen ? (
-                  <X className="w-6 h-6 text-gray-600" />
+                  <X className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                 ) : (
-                  <Menu className="w-6 h-6 text-gray-600" />
+                  <Menu className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                 )}
               </button>
             </div>
@@ -508,53 +509,65 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMobile && mobileMenuOpen && (
-        <div className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 max-h-[80vh] overflow-y-auto">
+        <div className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 max-h-[80vh] overflow-y-auto shadow-lg">
           <div className="px-4 py-3 space-y-1">
             <Link
               to="/home"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
             >
               Home
             </Link>
             <Link
               to="/blogs"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
             >
               Blogs
             </Link>
+
+            {isAuthenticated && (
+              <Link
+                to="/feed"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
+              >
+                Feed
+              </Link>
+            )}
 
             {/* Mobile Categories - Collapsible */}
             <div className="py-2">
               <button
                 onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
-                className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="flex items-center justify-between w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
+                aria-expanded={mobileCategoriesOpen}
               >
-                <span className="text-xs font-semibold text-gray-400 uppercase">
-                  Categories
-                </span>
+                <span>Categories</span>
                 <ChevronDown
-                  className={`w-4 h-4 text-gray-400 transition-transform ${
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
                     mobileCategoriesOpen ? "rotate-180" : ""
                   }`}
                 />
               </button>
 
               {mobileCategoriesOpen && (
-                <>
-                  <div className="grid grid-cols-3 gap-1 mt-1">
+                <div className="mt-2 px-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {ALL_CATEGORIES.slice(0, 15).map((cat) => {
                       const Icon = cat.icon;
                       return (
                         <Link
                           key={cat.name}
                           to={cat.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            setMobileCategoriesOpen(false);
+                          }}
+                          className="flex flex-col items-center justify-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
                         >
-                          <Icon className={`w-5 h-5 ${cat.color}`} />
-                          <span className="text-xs text-gray-600 dark:text-gray-400 mt-1 text-center">
+                          <Icon className={`w-6 h-6 ${cat.color} mb-1`} />
+                          <span className="text-xs text-gray-600 dark:text-gray-400 text-center leading-tight">
                             {cat.name}
                           </span>
                         </Link>
@@ -563,26 +576,29 @@ const Navbar = () => {
                   </div>
                   <Link
                     to="/categories"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block text-center text-xs text-primary-600 mt-2"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setMobileCategoriesOpen(false);
+                    }}
+                    className="block text-center text-sm text-primary-600 dark:text-primary-400 font-medium mt-3 py-2 hover:underline"
                   >
                     View All {ALL_CATEGORIES.length} Categories →
                   </Link>
-                </>
+                </div>
               )}
             </div>
 
             <Link
               to="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
             >
               About
             </Link>
             <Link
               to="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
             >
               Contact
             </Link>
@@ -593,7 +609,7 @@ const Navbar = () => {
                   <Link
                     to="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
                   >
                     Admin
                   </Link>
@@ -603,7 +619,7 @@ const Navbar = () => {
                     <Link
                       to="/moderator"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
                     >
                       Moderator
                     </Link>
@@ -613,7 +629,7 @@ const Navbar = () => {
                     <Link
                       to="/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
                     >
                       Dashboard
                     </Link>
@@ -621,18 +637,25 @@ const Navbar = () => {
                 <Link
                   to="/profile"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
                 >
                   Profile
+                </Link>
+                <Link
+                  to="/settings"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
+                >
+                  Settings
                 </Link>
                 <button
                   onClick={() => {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="block w-full text-left px-3 py-2 rounded-lg text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="flex items-center w-full px-4 py-3 rounded-lg text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
                 >
-                  Logout
+                  <LogOut className="w-5 h-5 mr-2" /> Logout
                 </button>
               </>
             ) : (
@@ -640,14 +663,14 @@ const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors touch-target"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-primary-600 font-medium hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-4 py-3 rounded-lg text-base font-medium text-white bg-primary-600 hover:bg-primary-700 text-center transition-colors touch-target"
                 >
                   Sign Up
                 </Link>

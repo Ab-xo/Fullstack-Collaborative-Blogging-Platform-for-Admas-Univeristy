@@ -28,6 +28,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useTableInteraction } from "../../hooks/useTableInteraction";
+import { useIsMobile } from "../../hooks/useMediaQuery";
 import TableContextMenu from "./TableContextMenu";
 import DeleteTableDialog from "./DeleteTableDialog";
 import {
@@ -64,6 +65,7 @@ const RichTextEditor = ({
   isConnected,
 }) => {
   const editorRef = useRef(null);
+  const isMobile = useIsMobile();
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [showBulletDropdown, setShowBulletDropdown] = useState(false);
@@ -1049,6 +1051,63 @@ const RichTextEditor = ({
     }
   };
 
+  // Simplified mobile toolbar with essential tools only
+  const mobileToolbarGroups = [
+    // Text formatting
+    {
+      type: "group",
+      buttons: [
+        {
+          icon: Bold,
+          label: "Bold",
+          action: () => executeCommand("bold"),
+        },
+        {
+          icon: Italic,
+          label: "Italic",
+          action: () => executeCommand("italic"),
+        },
+        {
+          icon: Underline,
+          label: "Underline",
+          action: () => executeCommand("underline"),
+        },
+      ],
+    },
+    // Lists
+    {
+      type: "group",
+      buttons: [
+        {
+          icon: List,
+          label: "Bullet List",
+          action: () => executeCommand("insertUnorderedList"),
+        },
+        {
+          icon: ListOrdered,
+          label: "Numbered List",
+          action: () => executeCommand("insertOrderedList"),
+        },
+      ],
+    },
+    // Insert
+    {
+      type: "group",
+      buttons: [
+        {
+          icon: LinkIcon,
+          label: "Link",
+          action: () => setShowLinkDialog(true),
+        },
+        {
+          icon: ImageIcon,
+          label: "Image",
+          action: () => setShowImageDialog(true),
+        },
+      ],
+    },
+  ];
+
   return (
     <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden bg-white dark:bg-gray-900">
       <style>{`
@@ -1224,264 +1283,266 @@ const RichTextEditor = ({
       {/* Toolbar */}
       <div className="bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-600 p-2">
         <div className="flex flex-wrap items-center gap-1">
-          {toolbarGroups.map((group, groupIndex) => (
-            <div key={groupIndex} className="flex items-center">
-              {group.type === "font-dropdown" ? (
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowFontDropdown(!showFontDropdown);
-                      setShowSizeDropdown(false);
-                    }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[140px] justify-between"
-                  >
-                    <span>{group.label}</span>
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-                  {showFontDropdown && (
-                    <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[180px] max-h-[300px] overflow-y-auto">
-                      {group.options.map((option, optIndex) => (
+          {(isMobile ? mobileToolbarGroups : toolbarGroups).map(
+            (group, groupIndex) => (
+              <div key={groupIndex} className="flex items-center">
+                {group.type === "font-dropdown" ? (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowFontDropdown(!showFontDropdown);
+                        setShowSizeDropdown(false);
+                      }}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[140px] justify-between"
+                    >
+                      <span>{group.label}</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                    {showFontDropdown && (
+                      <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[180px] max-h-[300px] overflow-y-auto">
+                        {group.options.map((option, optIndex) => (
+                          <button
+                            key={optIndex}
+                            type="button"
+                            onClick={() => {
+                              setCurrentFont(option.label);
+                              executeCommand("fontName", option.value);
+                              setShowFontDropdown(false);
+                            }}
+                            className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg"
+                            style={{ fontFamily: option.value }}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : group.type === "size-dropdown" ? (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowSizeDropdown(!showSizeDropdown);
+                        setShowFontDropdown(false);
+                      }}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] justify-between"
+                    >
+                      <span>{group.label}</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                    {showSizeDropdown && (
+                      <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[80px] max-h-[300px] overflow-y-auto">
+                        {group.options.map((size, optIndex) => (
+                          <button
+                            key={optIndex}
+                            type="button"
+                            onClick={() => {
+                              setCurrentSize(size);
+                              executeCommand("fontSize", "7");
+                              const selection = window.getSelection();
+                              if (selection.rangeCount > 0) {
+                                const range = selection.getRangeAt(0);
+                                const span = document.createElement("span");
+                                span.style.fontSize = `${size}px`;
+                                range.surroundContents(span);
+                              }
+                              setShowSizeDropdown(false);
+                              handleContentChange();
+                            }}
+                            className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg"
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : group.type === "dropdown" ? (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowFormatDropdown(!showFormatDropdown)}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[120px] justify-between"
+                    >
+                      <span>{group.label}</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                    {showFormatDropdown && (
+                      <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[150px]">
+                        {group.options.map((option, optIndex) => (
+                          <button
+                            key={optIndex}
+                            type="button"
+                            onClick={() => group.action(option)}
+                            className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg"
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-0.5">
+                    {group.buttons.map((button, btnIndex) => (
+                      <div key={btnIndex} className="relative">
                         <button
-                          key={optIndex}
                           type="button"
-                          onClick={() => {
-                            setCurrentFont(option.label);
-                            executeCommand("fontName", option.value);
-                            setShowFontDropdown(false);
+                          onClick={(e) => {
+                            if (button.hasColorPicker) {
+                              e.stopPropagation();
+                              if (button.pickerType === "text") {
+                                setShowColorPicker(!showColorPicker);
+                                setShowHighlightPicker(false);
+                              } else if (button.pickerType === "highlight") {
+                                setShowHighlightPicker(!showHighlightPicker);
+                                setShowColorPicker(false);
+                              }
+                            } else if (button.hasDropdown) {
+                              e.stopPropagation();
+                              if (button.dropdownId === "bullet") {
+                                setShowBulletDropdown(!showBulletDropdown);
+                                setShowNumberDropdown(false);
+                              } else if (button.dropdownId === "number") {
+                                setShowNumberDropdown(!showNumberDropdown);
+                                setShowBulletDropdown(false);
+                              }
+                            } else {
+                              button.action();
+                            }
                           }}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg"
-                          style={{ fontFamily: option.value }}
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : group.type === "size-dropdown" ? (
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowSizeDropdown(!showSizeDropdown);
-                      setShowFontDropdown(false);
-                    }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] justify-between"
-                  >
-                    <span>{group.label}</span>
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-                  {showSizeDropdown && (
-                    <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[80px] max-h-[300px] overflow-y-auto">
-                      {group.options.map((size, optIndex) => (
-                        <button
-                          key={optIndex}
-                          type="button"
-                          onClick={() => {
-                            setCurrentSize(size);
-                            executeCommand("fontSize", "7");
-                            const selection = window.getSelection();
-                            if (selection.rangeCount > 0) {
-                              const range = selection.getRangeAt(0);
-                              const span = document.createElement("span");
-                              span.style.fontSize = `${size}px`;
-                              range.surroundContents(span);
-                            }
-                            setShowSizeDropdown(false);
-                            handleContentChange();
-                          }}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg"
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : group.type === "dropdown" ? (
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setShowFormatDropdown(!showFormatDropdown)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[120px] justify-between"
-                  >
-                    <span>{group.label}</span>
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-                  {showFormatDropdown && (
-                    <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-10 min-w-[150px]">
-                      {group.options.map((option, optIndex) => (
-                        <button
-                          key={optIndex}
-                          type="button"
-                          onClick={() => group.action(option)}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg"
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="flex items-center gap-0.5">
-                  {group.buttons.map((button, btnIndex) => (
-                    <div key={btnIndex} className="relative">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          if (button.hasColorPicker) {
-                            e.stopPropagation();
-                            if (button.pickerType === "text") {
-                              setShowColorPicker(!showColorPicker);
-                              setShowHighlightPicker(false);
-                            } else if (button.pickerType === "highlight") {
-                              setShowHighlightPicker(!showHighlightPicker);
-                              setShowColorPicker(false);
-                            }
-                          } else if (button.hasDropdown) {
-                            e.stopPropagation();
-                            if (button.dropdownId === "bullet") {
-                              setShowBulletDropdown(!showBulletDropdown);
-                              setShowNumberDropdown(false);
-                            } else if (button.dropdownId === "number") {
-                              setShowNumberDropdown(!showNumberDropdown);
-                              setShowBulletDropdown(false);
-                            }
-                          } else {
-                            button.action();
+                          onMouseEnter={() =>
+                            setHoveredButton(`${groupIndex}-${btnIndex}`)
                           }
-                        }}
-                        onMouseEnter={() =>
-                          setHoveredButton(`${groupIndex}-${btnIndex}`)
-                        }
-                        onMouseLeave={() => setHoveredButton(null)}
-                        className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors group relative"
-                      >
-                        {typeof button.icon === "function" ? (
-                          <button.icon />
-                        ) : (
-                          <button.icon className="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100" />
-                        )}
-                        {button.hasDropdown && (
-                          <ChevronDown className="w-2 h-2 absolute bottom-0 right-0 text-gray-500" />
-                        )}
-                      </button>
+                          onMouseLeave={() => setHoveredButton(null)}
+                          className="touch-target p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors group relative"
+                        >
+                          {typeof button.icon === "function" ? (
+                            <button.icon />
+                          ) : (
+                            <button.icon className="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100" />
+                          )}
+                          {button.hasDropdown && (
+                            <ChevronDown className="w-2 h-2 absolute bottom-0 right-0 text-gray-500" />
+                          )}
+                        </button>
 
-                      {/* Tooltip */}
-                      {hoveredButton === `${groupIndex}-${btnIndex}` && (
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-50 pointer-events-none">
-                          {button.label}
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
-                        </div>
-                      )}
-
-                      {/* Dropdown Menu */}
-                      {button.hasDropdown &&
-                        ((button.dropdownId === "bullet" &&
-                          showBulletDropdown) ||
-                          (button.dropdownId === "number" &&
-                            showNumberDropdown)) && (
-                          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-[180px]">
-                            {button.dropdownOptions.map((option, optIdx) => (
-                              <button
-                                key={optIdx}
-                                type="button"
-                                onClick={() => {
-                                  if (button.dropdownId === "bullet") {
-                                    executeCommand("insertUnorderedList");
-                                  } else {
-                                    executeCommand("insertOrderedList");
-                                  }
-                                  setShowBulletDropdown(false);
-                                  setShowNumberDropdown(false);
-                                }}
-                                className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg flex items-center gap-2"
-                              >
-                                <span className="font-mono">
-                                  {option.label}
-                                </span>
-                              </button>
-                            ))}
+                        {/* Tooltip */}
+                        {hoveredButton === `${groupIndex}-${btnIndex}` && (
+                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-50 pointer-events-none">
+                            {button.label}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
                           </div>
                         )}
 
-                      {/* Color Picker - Full Size Swatches */}
-                      {button.hasColorPicker &&
-                        button.pickerType === "text" &&
-                        showColorPicker && (
-                          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 min-w-[240px]">
-                            <div className="grid grid-cols-7 gap-2">
-                              {textColors.map((color, idx) => (
+                        {/* Dropdown Menu */}
+                        {button.hasDropdown &&
+                          ((button.dropdownId === "bullet" &&
+                            showBulletDropdown) ||
+                            (button.dropdownId === "number" &&
+                              showNumberDropdown)) && (
+                            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-[180px]">
+                              {button.dropdownOptions.map((option, optIdx) => (
                                 <button
-                                  key={idx}
+                                  key={optIdx}
                                   type="button"
                                   onClick={() => {
-                                    executeCommand("foreColor", color);
-                                    setShowColorPicker(false);
+                                    if (button.dropdownId === "bullet") {
+                                      executeCommand("insertUnorderedList");
+                                    } else {
+                                      executeCommand("insertOrderedList");
+                                    }
+                                    setShowBulletDropdown(false);
+                                    setShowNumberDropdown(false);
                                   }}
-                                  className="w-8 h-8 rounded border-2 border-gray-300 dark:border-gray-600 hover:scale-110 hover:border-blue-500 transition-all cursor-pointer"
-                                  style={{ backgroundColor: color }}
-                                  title={color}
-                                />
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 first:rounded-t-lg last:rounded-b-lg flex items-center gap-2"
+                                >
+                                  <span className="font-mono">
+                                    {option.label}
+                                  </span>
+                                </button>
                               ))}
                             </div>
-                          </div>
-                        )}
+                          )}
 
-                      {/* Highlight Picker - Full Size Swatches */}
-                      {button.hasColorPicker &&
-                        button.pickerType === "highlight" &&
-                        showHighlightPicker && (
-                          <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 min-w-[240px]">
-                            <div className="grid grid-cols-7 gap-2">
-                              {highlightColors.map((color, idx) => (
-                                <button
-                                  key={idx}
-                                  type="button"
-                                  onClick={() => {
-                                    executeCommand("backColor", color);
-                                    setShowHighlightPicker(false);
-                                  }}
-                                  className="w-8 h-8 rounded border-2 border-gray-300 dark:border-gray-600 hover:scale-110 hover:border-blue-500 transition-all cursor-pointer"
-                                  style={{
-                                    backgroundColor:
-                                      color === "transparent"
-                                        ? "#ffffff"
-                                        : color,
-                                    backgroundImage:
-                                      color === "transparent"
-                                        ? "linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)"
-                                        : "none",
-                                    backgroundSize:
-                                      color === "transparent"
-                                        ? "8px 8px"
-                                        : "auto",
-                                    backgroundPosition:
-                                      color === "transparent"
-                                        ? "0 0, 4px 4px"
-                                        : "0 0",
-                                  }}
-                                  title={
-                                    color === "transparent"
-                                      ? "No highlight"
-                                      : color
-                                  }
-                                />
-                              ))}
+                        {/* Color Picker - Full Size Swatches */}
+                        {button.hasColorPicker &&
+                          button.pickerType === "text" &&
+                          showColorPicker && (
+                            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 min-w-[240px]">
+                              <div className="grid grid-cols-7 gap-2">
+                                {textColors.map((color, idx) => (
+                                  <button
+                                    key={idx}
+                                    type="button"
+                                    onClick={() => {
+                                      executeCommand("foreColor", color);
+                                      setShowColorPicker(false);
+                                    }}
+                                    className="w-8 h-8 rounded border-2 border-gray-300 dark:border-gray-600 hover:scale-110 hover:border-blue-500 transition-all cursor-pointer"
+                                    style={{ backgroundColor: color }}
+                                    title={color}
+                                  />
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                    </div>
-                  ))}
-                </div>
-              )}
-              {groupIndex < toolbarGroups.length - 1 && (
-                <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-              )}
-            </div>
-          ))}
+                          )}
+
+                        {/* Highlight Picker - Full Size Swatches */}
+                        {button.hasColorPicker &&
+                          button.pickerType === "highlight" &&
+                          showHighlightPicker && (
+                            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 p-3 min-w-[240px]">
+                              <div className="grid grid-cols-7 gap-2">
+                                {highlightColors.map((color, idx) => (
+                                  <button
+                                    key={idx}
+                                    type="button"
+                                    onClick={() => {
+                                      executeCommand("backColor", color);
+                                      setShowHighlightPicker(false);
+                                    }}
+                                    className="w-8 h-8 rounded border-2 border-gray-300 dark:border-gray-600 hover:scale-110 hover:border-blue-500 transition-all cursor-pointer"
+                                    style={{
+                                      backgroundColor:
+                                        color === "transparent"
+                                          ? "#ffffff"
+                                          : color,
+                                      backgroundImage:
+                                        color === "transparent"
+                                          ? "linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)"
+                                          : "none",
+                                      backgroundSize:
+                                        color === "transparent"
+                                          ? "8px 8px"
+                                          : "auto",
+                                      backgroundPosition:
+                                        color === "transparent"
+                                          ? "0 0, 4px 4px"
+                                          : "0 0",
+                                    }}
+                                    title={
+                                      color === "transparent"
+                                        ? "No highlight"
+                                        : color
+                                    }
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {groupIndex < toolbarGroups.length - 1 && (
+                  <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+                )}
+              </div>
+            ),
+          )}
         </div>
       </div>
 

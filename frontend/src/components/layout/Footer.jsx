@@ -76,8 +76,8 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-gray-300">
       {/* Main Footer */}
-      <div className="container-max section-padding py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+      <div className="responsive-container responsive-padding">
+        <div className="responsive-grid-1-2-4 lg:grid-cols-6">
           <div className="col-span-2 space-y-5">
             <div className="flex items-center space-x-3">
               <div className="relative">
@@ -102,7 +102,7 @@ const Footer = () => {
               knowledge sharing, academic discourse, and innovative content
               creation.
             </p>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap justify-center sm:justify-start">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
@@ -111,8 +111,9 @@ const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`p-2.5 rounded-xl bg-gray-800/80 ${social.color} transition-all duration-300 group border border-gray-700/50 hover:border-transparent hover:scale-110`}
+                    className={`touch-target p-2.5 rounded-xl bg-gray-800/80 ${social.color} transition-all duration-300 group border border-gray-700/50 hover:border-transparent hover:scale-110`}
                     title={social.name}
+                    aria-label={social.name}
                   >
                     <Icon className="h-4 w-4 text-gray-400 group-hover:text-white transition-colors" />
                   </a>
@@ -183,7 +184,7 @@ const Footer = () => {
                   </p>
                 </div>
               </a>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <a
                   href="tel:+251116671234"
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-800/50 hover:bg-gray-800 transition-colors group"
@@ -220,8 +221,8 @@ const Footer = () => {
 
       {/* Bottom Footer */}
       <div className="border-t border-gray-800/50">
-        <div className="container-max section-padding py-5">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="responsive-container py-5">
+          <div className="responsive-flex-between">
             <p className="text-sm text-gray-500">
               {new Date().getFullYear()}{" "}
               <span className="text-gray-400">{SITE_BRANDING.footerName}</span>.

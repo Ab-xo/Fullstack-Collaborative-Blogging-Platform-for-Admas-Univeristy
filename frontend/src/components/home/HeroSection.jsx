@@ -250,7 +250,7 @@ const HeroSection = () => {
         {
           opacity: 0,
           y: 60,
-        }
+        },
       );
       gsap.set(statsRef.current?.children || [], {
         opacity: 0,
@@ -281,7 +281,7 @@ const HeroSection = () => {
           y: 0,
           duration: 1,
         },
-        "-=0.5"
+        "-=0.5",
       );
 
       // Subtitle with gradient reveal
@@ -292,7 +292,7 @@ const HeroSection = () => {
           y: 0,
           duration: 1,
         },
-        "-=0.7"
+        "-=0.7",
       );
 
       // Description
@@ -303,7 +303,7 @@ const HeroSection = () => {
           y: 0,
           duration: 0.8,
         },
-        "-=0.6"
+        "-=0.6",
       );
 
       // Buttons with stagger
@@ -314,7 +314,7 @@ const HeroSection = () => {
           y: 0,
           duration: 0.8,
         },
-        "-=0.5"
+        "-=0.5",
       );
 
       // Stats with stagger
@@ -328,7 +328,7 @@ const HeroSection = () => {
           duration: 0.6,
           ease: "back.out(1.4)",
         },
-        "-=0.4"
+        "-=0.4",
       );
 
       // Card with 3D entrance
@@ -341,7 +341,7 @@ const HeroSection = () => {
           duration: 1.2,
           ease: "power3.out",
         },
-        "-=1"
+        "-=1",
       );
 
       // Scroll-triggered parallax
@@ -392,11 +392,11 @@ const HeroSection = () => {
 
   const currentPost = useMemo(
     () => featuredPosts[currentIndex],
-    [featuredPosts, currentIndex]
+    [featuredPosts, currentIndex],
   );
   const goToPrevious = () =>
     setCurrentIndex((prev) =>
-      prev === 0 ? featuredPosts.length - 1 : prev - 1
+      prev === 0 ? featuredPosts.length - 1 : prev - 1,
     );
   const goToNext = () =>
     setCurrentIndex((prev) => (prev + 1) % featuredPosts.length);
@@ -427,8 +427,8 @@ const HeroSection = () => {
       <div className="hero-bg-element absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-tl from-blue-500/10 to-blue-400/10 dark:from-blue-500/15 dark:to-blue-400/15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
       <div className="hero-bg-element absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-gradient-to-r from-cyan-500/5 to-blue-500/5 dark:from-cyan-500/10 dark:to-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
 
-      {/* Animated Floating Objects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Animated Floating Objects - Hidden on mobile for performance */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block">
         {/* Floating Circles */}
         <div
           className="absolute top-[15%] left-[10%] w-4 h-4 rounded-full bg-blue-400/30 dark:bg-blue-400/40"
@@ -602,8 +602,8 @@ const HeroSection = () => {
       `}</style>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="responsive-container relative z-10 w-full responsive-padding-y">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           {/* Left: Content */}
           <div>
             {/* Badge */}
@@ -621,7 +621,7 @@ const HeroSection = () => {
             {/* Title */}
             <h1
               ref={titleRef}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-3"
+              className="responsive-heading-1 text-gray-900 dark:text-white mb-3"
             >
               Share{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-400">
@@ -630,10 +630,7 @@ const HeroSection = () => {
             </h1>
 
             {/* Subtitle */}
-            <h2
-              ref={subtitleRef}
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6"
-            >
+            <h2 ref={subtitleRef} className="responsive-heading-2 mb-6">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500">
                 Build Community
               </span>
@@ -642,27 +639,24 @@ const HeroSection = () => {
             {/* Description */}
             <p
               ref={descRef}
-              className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed"
+              className="responsive-text text-gray-600 dark:text-gray-300 mb-8 max-w-lg leading-relaxed"
             >
               Connect with fellow students, faculty, and alumni. Share your
               research, insights, and experiences in our collaborative platform.
             </p>
 
             {/* Buttons */}
-            <div
-              ref={buttonsRef}
-              className="flex flex-col sm:flex-row gap-4 mb-10"
-            >
+            <div ref={buttonsRef} className="responsive-flex mb-10">
               {/* Smart CTA based on user state */}
               {isAuthenticated ? (
                 // For logged-in users
                 user?.roles?.some((role) =>
-                  ["author", "moderator", "admin"].includes(role)
+                  ["author", "moderator", "admin"].includes(role),
                 ) ? (
                   // For authors - encourage creating content
                   <Link
                     to="/posts/create"
-                    className="group inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-7 py-4 rounded-xl font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
+                    className="group responsive-button inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
                   >
                     <PenTool className="h-5 w-5" />
                     <span>Create New Post</span>
@@ -672,7 +666,7 @@ const HeroSection = () => {
                   // For readers - encourage becoming authors
                   <Link
                     to="/contact"
-                    className="group inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white px-7 py-4 rounded-xl font-semibold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
+                    className="group responsive-button inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
                   >
                     <Sparkles className="h-5 w-5" />
                     <span>Become an Author</span>
@@ -683,7 +677,7 @@ const HeroSection = () => {
                 // For guests - encourage registration
                 <Link
                   to="/register"
-                  className="group inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-7 py-4 rounded-xl font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
+                  className="group responsive-button inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 transform hover:-translate-y-0.5"
                 >
                   <PenTool className="h-5 w-5" />
                   <span>Start Writing</span>
@@ -692,7 +686,7 @@ const HeroSection = () => {
               )}
               <Link
                 to="/blogs"
-                className="inline-flex items-center justify-center space-x-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-7 py-4 rounded-xl font-semibold border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 transform hover:-translate-y-0.5"
+                className="responsive-button inline-flex items-center justify-center space-x-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-xl font-semibold border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 transform hover:-translate-y-0.5"
               >
                 <BookOpen className="h-5 w-5" />
                 <span>Explore Blogs</span>
@@ -700,7 +694,10 @@ const HeroSection = () => {
             </div>
 
             {/* Stats */}
-            <div ref={statsRef} className="grid grid-cols-4 gap-3">
+            <div
+              ref={statsRef}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+            >
               {PLATFORM_STATS.map((stat, i) => {
                 const Icon = stat.icon;
                 return (

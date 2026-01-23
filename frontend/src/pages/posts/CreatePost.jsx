@@ -470,7 +470,7 @@ const CreatePost = () => {
   const watchedCategory = watch("category") || "general";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="responsive-container-narrow responsive-padding-y">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Main Content Area */}
         <div className="flex-1 min-w-0">
@@ -555,7 +555,7 @@ const CreatePost = () => {
               </div>
 
               {/* Category and Tags Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="responsive-form-row">
                 {/* Category */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -565,7 +565,7 @@ const CreatePost = () => {
                     {...register("category", {
                       required: "Category is required",
                     })}
-                    className="block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="responsive-input block w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   >
                     <option value="">Select a category</option>
                     {CATEGORIES.map((cat) => (
@@ -850,7 +850,7 @@ const CreatePost = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="responsive-flex pt-6 border-t border-gray-200 dark:border-gray-700">
                 <Button
                   type="button"
                   variant="secondary"
@@ -858,7 +858,7 @@ const CreatePost = () => {
                   loading={loading}
                   onClick={handleSubmit((data) => onSubmit(data, "draft"))}
                   disabled={!isDirty}
-                  className="flex-1 sm:flex-none px-8 py-3 rounded-xl transition-all duration-200"
+                  className="responsive-button mobile-full rounded-xl transition-all duration-200"
                 >
                   Save as Draft
                 </Button>
@@ -867,7 +867,7 @@ const CreatePost = () => {
                   variant="primary"
                   icon={Send}
                   loading={loading}
-                  className="flex-1 sm:flex-none px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+                  className="responsive-button mobile-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
                 >
                   Submit for Review
                 </Button>
